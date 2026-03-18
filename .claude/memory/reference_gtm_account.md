@@ -10,4 +10,6 @@ Zipmend GTM account:
 - **Auth**: Application Default Credentials with GTM scopes
 - **GCP Project**: zipmend-2e643
 
-Container IDs will be populated after first `gtm containers list` run.
+Containers:
+- **32433317** — `zipmend.com (Client)` (GTM-KHRDCTV) — client-side container
+- **171542205** — `tech2.zipmend.com (Server)` (GTM-5X8VX8N7) — server-side container

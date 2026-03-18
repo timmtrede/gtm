@@ -9,8 +9,9 @@ build/
 .venv/
 venv/
 
-# Environment
+# Environment & credentials
 .env
+.credentials.json
 
 # IDE
 .idea/

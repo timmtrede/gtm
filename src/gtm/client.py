@@ -2,9 +2,10 @@
 
 import os
 import time
+from pathlib import Path
 
-import google.auth
 from google.auth.transport.requests import Request
+from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -19,14 +20,18 @@ class GTMClient:
         "https://www.googleapis.com/auth/tagmanager.publish",
     ]
 
-    def __init__(self, account_id: str | None = None):
+    def __init__(self, account_id: str | None = None, credentials_path: str | None = None):
         self.account_id = account_id or os.environ.get("GTM_ACCOUNT_ID", "6002017930")
+        self.credentials_path = credentials_path or os.environ.get(
+            "GOOGLE_APPLICATION_CREDENTIALS",
+            str(Path(__file__).resolve().parents[2] / ".credentials.json"),
+        )
         self._service = None
 
     @property
     def service(self):
         if self._service is None:
-            credentials, _ = google.auth.default(scopes=self.SCOPES)
+            credentials = Credentials.from_service_account_file(self.credentials_path, scopes=self.SCOPES)
             credentials.refresh(Request())
             self._service = build("tagmanager", "v2", credentials=credentials)
         return self._service
