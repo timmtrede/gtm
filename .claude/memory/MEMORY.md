@@ -10,3 +10,4 @@
 - [reference_jira_api_fallback.md](reference_jira_api_fallback.md) — Use curl with .env credentials when Atlassian MCP fails
 - [reference_github_auth.md](reference_github_auth.md) — GitHub PAT location for pushing to repo
 - [reference_gtm_account.md](reference_gtm_account.md) — Zipmend GTM account ID and container info
+- [feedback_firestore_readonly.md](feedback_firestore_readonly.md) — GOLDEN RULE: never write to Firestore or BigQuery without double confirmation
