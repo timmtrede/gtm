@@ -259,5 +259,189 @@ def audit_container(container_id: str, workspace_id: str = "0") -> dict:
     return _audit(_client(), container_id, workspace_id).model_dump()
 
 
+# --- Firestore ---
+
+
+def _fs_client():
+    from gtm.firestore_client import FirestoreClient
+
+    return FirestoreClient()
+
+
+@mcp.tool(
+    description="List all Firestore collections with document counts",
+    annotations={"readOnlyHint": True},
+)
+def firestore_list_collections() -> list[dict]:
+    from gtm.operations.firestore_ops import list_collections
+
+    return list_collections(_fs_client())
+
+
+@mcp.tool(
+    description="Query GTM server container events. Filter by event_name, user_id, or transaction_id.",
+    annotations={"readOnlyHint": True},
+)
+def firestore_query_events(
+    event_name: str = "",
+    user_id: str = "",
+    transaction_id: str = "",
+    limit: int = 20,
+) -> list[dict]:
+    from gtm.operations.firestore_ops import query_events
+
+    return query_events(
+        _fs_client(),
+        event_name=event_name or None,
+        user_id=user_id or None,
+        transaction_id=transaction_id or None,
+        limit=limit,
+    )
+
+
+@mcp.tool(
+    description="Get a single event document by Firestore document ID",
+    annotations={"readOnlyHint": True},
+)
+def firestore_get_event(doc_id: str) -> dict | None:
+    from gtm.operations.firestore_ops import get_event
+
+    return get_event(_fs_client(), doc_id)
+
+
+@mcp.tool(
+    description="List or lookup existing customers. Provide user_id to filter.",
+    annotations={"readOnlyHint": True},
+)
+def firestore_customers(user_id: str = "", limit: int = 50) -> list[dict]:
+    from gtm.operations.firestore_ops import list_customers, lookup_customer
+
+    if user_id:
+        return lookup_customer(_fs_client(), user_id)
+    return list_customers(_fs_client(), limit=limit)
+
+
+@mcp.tool(
+    description="Get the lead score for a company domain",
+    annotations={"readOnlyHint": True},
+)
+def firestore_get_score(domain: str) -> dict | None:
+    from gtm.operations.firestore_ops import get_score
+
+    return get_score(_fs_client(), domain)
+
+
+@mcp.tool(
+    description="List lead score documents",
+    annotations={"readOnlyHint": True},
+)
+def firestore_list_scores(limit: int = 20) -> list[dict]:
+    from gtm.operations.firestore_ops import query_scores
+
+    return query_scores(_fs_client(), limit=limit)
+
+
+@mcp.tool(
+    description="Check if a domain is in the generic email domains list (e.g. gmail.com)",
+    annotations={"readOnlyHint": True},
+)
+def firestore_is_generic_domain(domain: str) -> dict:
+    from gtm.operations.firestore_ops import is_generic_domain
+
+    return {"domain": domain, "is_generic": is_generic_domain(_fs_client(), domain)}
+
+
+@mcp.tool(
+    description="Run a generic query on any Firestore collection with optional field filter",
+    annotations={"readOnlyHint": True},
+)
+def firestore_query(
+    collection: str,
+    field: str = "",
+    op: str = "==",
+    value: str = "",
+    limit: int = 20,
+) -> list[dict]:
+    from gtm.operations.firestore_ops import query_collection
+
+    return query_collection(
+        _fs_client(),
+        collection,
+        field=field or None,
+        op=op,
+        value=value or None,
+        limit=limit,
+    )
+
+
+# --- BigQuery ---
+
+
+def _bq_client():
+    from gtm.bigquery_client import BigQueryClient
+
+    return BigQueryClient()
+
+
+@mcp.tool(
+    description="List all BigQuery datasets in the project",
+    annotations={"readOnlyHint": True},
+)
+def bigquery_list_datasets() -> list[dict]:
+    from gtm.operations.bigquery_ops import list_datasets
+
+    return list_datasets(_bq_client())
+
+
+@mcp.tool(
+    description="List all tables in a BigQuery dataset",
+    annotations={"readOnlyHint": True},
+)
+def bigquery_list_tables(dataset_id: str) -> list[dict]:
+    from gtm.operations.bigquery_ops import list_tables
+
+    return list_tables(_bq_client(), dataset_id)
+
+
+@mcp.tool(
+    description="Get schema and metadata for a BigQuery table (columns, types, row count, size)",
+    annotations={"readOnlyHint": True},
+)
+def bigquery_get_table_schema(dataset_id: str, table_id: str) -> dict:
+    from gtm.operations.bigquery_ops import get_table_schema
+
+    return get_table_schema(_bq_client(), dataset_id, table_id)
+
+
+@mcp.tool(
+    description="Preview rows from a BigQuery table without running a query",
+    annotations={"readOnlyHint": True},
+)
+def bigquery_preview_table(dataset_id: str, table_id: str, limit: int = 10) -> list[dict]:
+    from gtm.operations.bigquery_ops import preview_table
+
+    return preview_table(_bq_client(), dataset_id, table_id, limit=limit)
+
+
+@mcp.tool(
+    description="Run a read-only SQL query on BigQuery. Has a 10 GB safety limit.",
+    annotations={"readOnlyHint": True},
+)
+def bigquery_query(sql: str, limit: int = 100) -> dict:
+    from gtm.operations.bigquery_ops import run_query
+
+    return run_query(_bq_client(), sql, limit=limit)
+
+
+@mcp.tool(
+    description="Dry-run a BigQuery SQL query to estimate bytes processed without executing",
+    annotations={"readOnlyHint": True},
+)
+def bigquery_dry_run(sql: str) -> dict:
+    from gtm.operations.bigquery_ops import dry_run_query
+
+    return dry_run_query(_bq_client(), sql)
+
+
 if __name__ == "__main__":
     mcp.run()

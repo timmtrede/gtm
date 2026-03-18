@@ -17,6 +17,8 @@ dependencies = [
     "fastmcp>=2.0",
     "deepdiff>=7.0",
     "python-dotenv>=1.0",
+    "google-cloud-firestore>=2.0",
+    "google-cloud-bigquery>=3.0",
 ]
 
 [project.optional-dependencies]
