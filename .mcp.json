@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "gtm": {
+      "command": "python",
+      "args": ["-m", "gtm.mcp_server"],
+      "cwd": "/Users/jeremie/PycharmProjects/gtm",
+      "env": {
+        "PYTHONPATH": "/Users/jeremie/PycharmProjects/gtm/src"
+      }
+    }
+  }
+}

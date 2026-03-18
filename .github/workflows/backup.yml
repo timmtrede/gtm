@@ -1,0 +1,41 @@
+name: Weekly GTM Backup
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"  # Every Monday at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Backup all containers
+        run: |
+          for container_id in $(gtm containers list --format json | python -c "import sys,json; [print(c['container_id']) for c in json.load(sys.stdin)]"); do
+            gtm backup --container "$container_id"
+          done
+
+      - name: Commit backups
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add backups/
+          git diff --staged --quiet || git commit -m "chore: weekly GTM backup $(date +%Y-%m-%d)"
+          git push
