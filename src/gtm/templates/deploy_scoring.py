@@ -15,15 +15,12 @@ Usage:
 """
 
 import argparse
-import json
-import sys
 
 from gtm.client import GTMClient
 from gtm.models import Variable
-from gtm.operations.variables import create_variable, list_variables
 from gtm.operations.tags import get_tag, update_tag
-from gtm.operations.workspaces import list_workspaces, create_workspace
-
+from gtm.operations.variables import create_variable, list_variables
+from gtm.operations.workspaces import create_workspace, list_workspaces
 
 WEB_CONTAINER_ID = "32433317"
 SERVER_CONTAINER_ID = "171542205"
@@ -60,7 +57,7 @@ def deploy_web_container(client: GTMClient, workspace_id: str, dry_run: bool = F
     print("\n=== Web Container (32433317) ===")
 
     if dry_run:
-        print(f"  [DRY RUN] Would create variable: dlv.value_eur")
+        print("  [DRY RUN] Would create variable: dlv.value_eur")
         print(f"  [DRY RUN] Would add value_eur event param to ga4.purchase tag (ID {GA4_PURCHASE_TAG_ID})")
         return
 
