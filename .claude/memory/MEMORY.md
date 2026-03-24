@@ -11,3 +11,10 @@
 - [reference_github_auth.md](reference_github_auth.md) — GitHub PAT location for pushing to repo
 - [reference_gtm_account.md](reference_gtm_account.md) — Zipmend GTM account ID and container info
 - [feedback_firestore_readonly.md](feedback_firestore_readonly.md) — GOLDEN RULE: never write to Firestore or BigQuery without double confirmation
+- [feedback_sgtm_template_patterns.md](feedback_sgtm_template_patterns.md) — sGTM sandboxed JS: no Math.exp, no scientific notation, lazy eval, null handling
+- [feedback_gtm_conventions_analysis.md](feedback_gtm_conventions_analysis.md) — Always audit container naming conventions before implementing
+- [feedback_bq_source_of_truth.md](feedback_bq_source_of_truth.md) — BQ training data is the source of truth for model validation
+- [feedback_testing_with_firestore_data.md](feedback_testing_with_firestore_data.md) — Test sGTM against actual Firestore data, not BQ snapshots
+- [feedback_debug_logging_sgtm.md](feedback_debug_logging_sgtm.md) — Add logToConsole immediately, don't guess at sGTM issues
+- [reference_gtm_api_types.md](reference_gtm_api_types.md) — GTM API variable type codes (ed, v, c, smm, etc.)
+- [project_scoring_model_v4.md](project_scoring_model_v4.md) — DATA-375 scoring model v4 deployment complete
